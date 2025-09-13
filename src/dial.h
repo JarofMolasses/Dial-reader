@@ -29,8 +29,8 @@ class DialReader
 
     public:
         DialReader(int clkPin_, int dataPin_);
-        int32_t getReading();
-        void processNextBit();
+        int32_t GetReading();
+        void ProcessBit();
 
 };
 

@@ -12,13 +12,15 @@ unsigned long printMillis;
 const unsigned long printPeriod = 100;
 
 void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(115200);
     Serial.println("Dial indicator gaming");
     printMillis = millis();
 }
 
 void loop() {
-    dial.processNextBit();
+    dial.ProcessBit();
+
     if(Serial.available())
     {
         Serial.readBytes(commandBuffer, 1);
@@ -28,7 +30,7 @@ void loop() {
                 continuousPrint = !continuousPrint;
                 break;
             case 's':
-                reading = dial.getReading();
+                reading = dial.GetReading();
                 Serial.println(reading);
                 break;
 
@@ -42,9 +44,11 @@ void loop() {
     {
         if(millis() - printMillis > printPeriod)      
         {
-            reading = dial.getReading();
+            digitalWrite(LED_BUILTIN, HIGH);
+            reading = dial.GetReading();
             Serial.println(reading);
             printMillis = millis();
+            digitalWrite(LED_BUILTIN,LOW);
         }
     }
 }

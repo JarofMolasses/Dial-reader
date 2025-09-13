@@ -11,8 +11,10 @@ DialReader::DialReader(int clkPin_, int dataPin_)
     lastNibbleTime = millis();
 }
 
-// Run as frequently as possible.
-void DialReader::processNextBit()
+/*
+ * Scans for a single bit from the datastream. 
+ */
+void DialReader::ProcessBit()
 {
     clk_temp = digitalRead(clkPin);
 
@@ -39,9 +41,7 @@ void DialReader::processNextBit()
         if(bit == PACKETLENGTH)
         {
             int8_t negativeMultiplier = raw & SIGNMASK ? -1 : 1;            
-            uint32_t value =  raw & VALUEMASK;
-
-            processed = negativeMultiplier*value;
+            processed = negativeMultiplier * (raw & VALUEMASK);
             bit = 0;
             raw = 0;
         }
@@ -49,7 +49,11 @@ void DialReader::processNextBit()
     clk_state = clk_temp;
 }
 
-int32_t DialReader::getReading()
+/*
+ * Returns reading in microns as signed integer
+ */
+int32_t DialReader::GetReading()
 {
     return processed;
 }
+
